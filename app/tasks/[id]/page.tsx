@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import api from '@/lib/api';
 import { Task } from '@/lib/types';
+import DiagramEditor from '@/components/DiagramEditor';
 
 const steps = [
     { id: 'assumptions', label: 'Assumptions', icon: Lightbulb },
@@ -171,6 +172,8 @@ export default function TaskWorkspace() {
                             })}
                         </div>
 
+
+
                         {/* Editor */}
                         <div className="flex-1 p-6 min-h-0">
                             <AnimatePresence mode="wait">
@@ -182,16 +185,25 @@ export default function TaskWorkspace() {
                                     transition={{ duration: 0.15 }}
                                     className="h-full flex flex-col"
                                 >
-                                    <label className="text-[9px] font-bold text-neutral-600 uppercase tracking-[0.2em] mb-4 block">
-                                        Drafting <span className="text-neutral-400">{activeTab.replace('-', ' ')}</span>
-                                    </label>
-                                    <textarea
-                                        autoFocus
-                                        value={(answers as any)[activeTab]}
-                                        onChange={(e) => handleInputChange(e.target.value)}
-                                        placeholder="Structure your architectural reasoning here..."
-                                        className="flex-1 bg-transparent border-none text-neutral-200 text-sm leading-relaxed placeholder:text-neutral-800 focus:outline-none resize-none custom-scrollbar"
-                                    />
+                                    {activeTab === 'architecture' ? (
+                                        <DiagramEditor
+                                            value={answers.architecture}
+                                            onChange={(val) => setAnswers({ ...answers, architecture: val })}
+                                        />
+                                    ) : (
+                                        <>
+                                            <label className="text-[9px] font-bold text-neutral-600 uppercase tracking-[0.2em] mb-4 block">
+                                                Drafting <span className="text-neutral-400">{activeTab.replace('-', ' ')}</span>
+                                            </label>
+                                            <textarea
+                                                autoFocus
+                                                value={(answers as any)[activeTab]}
+                                                onChange={(e) => handleInputChange(e.target.value)}
+                                                placeholder="Structure your architectural reasoning here..."
+                                                className="flex-1 bg-transparent border-none text-neutral-200 text-sm leading-relaxed placeholder:text-neutral-800 focus:outline-none resize-none custom-scrollbar"
+                                            />
+                                        </>
+                                    )}
                                 </motion.div>
                             </AnimatePresence>
                         </div>

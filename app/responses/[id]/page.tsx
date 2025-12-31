@@ -20,6 +20,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import api from '@/lib/api';
 import { TaskResponse, Task } from '@/lib/types';
+import MermaidRenderer from '@/components/MermaidRenderer';
 
 export default function ResponseDetail() {
     const params = useParams();
@@ -28,25 +29,59 @@ export default function ResponseDetail() {
     const [response, setResponse] = useState<TaskResponse | null>(null);
     const [task, setTask] = useState<Task | null>(null);
     const [loading, setLoading] = useState(true);
+    const [requestingFeedback, setRequestingFeedback] = useState(false);
+    const [timeLeft, setTimeLeft] = useState<number>(0);
+
+    const fetchData = async () => {
+        try {
+            const res = await api.get(`/responses/${responseId}`);
+            setResponse(res.data);
+
+            // Now fetch the task details
+            const taskRes = await api.get(`/tasks/${res.data.task_id}`);
+            setTask(taskRes.data);
+
+            // Calculate time left if feedback isn't unlocked
+            if (!res.data.ai_feedback) {
+                const submittedAt = new Date(res.data.submitted_at).getTime();
+                const now = new Date().getTime();
+                const diff = Math.max(0, 300 - Math.floor((now - submittedAt) / 1000));
+                setTimeLeft(diff);
+            }
+        } catch (err) {
+            console.error('Failed to fetch response details:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                const res = await api.get(`/responses/${responseId}`);
-                setResponse(res.data);
-
-                // Now fetch the task details
-                const taskRes = await api.get(`/tasks/${res.data.task_id}`);
-                setTask(taskRes.data);
-            } catch (err) {
-                console.error('Failed to fetch response details:', err);
-            } finally {
-                setLoading(false);
-            }
-        };
+        setLoading(true);
         fetchData();
     }, [responseId]);
+
+    // Countdown timer
+    useEffect(() => {
+        if (timeLeft <= 0) return;
+        const timer = setInterval(() => {
+            setTimeLeft(prev => Math.max(0, prev - 1));
+        }, 1000);
+        return () => clearInterval(timer);
+    }, [timeLeft]);
+
+    const handleRequestFeedback = async () => {
+        try {
+            setRequestingFeedback(true);
+            await api.post(`/responses/${responseId}/feedback`);
+            // Refresh to get the new feedback
+            await fetchData();
+        } catch (err: any) {
+            console.error('Failed to request feedback:', err);
+            alert(err.response?.data?.detail || 'Wait for cooldown to expire');
+        } finally {
+            setRequestingFeedback(false);
+        }
+    };
 
     if (loading) {
         return (
@@ -64,6 +99,12 @@ export default function ResponseDetail() {
             </div>
         );
     }
+
+    const formatTime = (seconds: number) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
 
     const scores = [
         { label: 'Clarity', value: response.score_breakdown.clarity, icon: Activity },
@@ -125,10 +166,33 @@ export default function ResponseDetail() {
 
                     {/* AI Feedback */}
                     <section className="space-y-4">
-                        <div className="flex items-center gap-3 px-4">
-                            <BrainCircuit className="w-4 h-4 text-white" />
-                            <h2 className="text-sm font-black uppercase tracking-widest text-white">Engineering Critique</h2>
+                        <div className="flex items-center justify-between px-4">
+                            <div className="flex items-center gap-3">
+                                <BrainCircuit className="w-4 h-4 text-white" />
+                                <h2 className="text-sm font-black uppercase tracking-widest text-white">Engineering Critique</h2>
+                            </div>
+
+                            {!response.ai_feedback && (
+                                <div className="flex items-center gap-3">
+                                    {timeLeft > 0 ? (
+                                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-neutral-500 uppercase tracking-widest">
+                                            <Clock className="w-3.5 h-3.5" />
+                                            Cooldown: {formatTime(timeLeft)}
+                                        </div>
+                                    ) : (
+                                        <button
+                                            onClick={handleRequestFeedback}
+                                            disabled={requestingFeedback}
+                                            className="px-4 py-1.5 rounded-full bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-neutral-200 transition-all flex items-center gap-2 disabled:opacity-50"
+                                        >
+                                            {requestingFeedback ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5 fill-black" />}
+                                            Unlock Feedback
+                                        </button>
+                                    )}
+                                </div>
+                            )}
                         </div>
+
                         <div className="p-8 rounded-3xl border border-white/10 bg-white/[0.02] relative overflow-hidden">
                             <div className="absolute top-0 right-0 p-8 opacity-[0.02]">
                                 <BrainCircuit className="w-48 h-48" />
@@ -141,7 +205,12 @@ export default function ResponseDetail() {
                                 ) : (
                                     <div className="flex flex-col items-center py-12 text-neutral-600">
                                         <Loader2 className="w-8 h-8 animate-spin mb-4 opacity-20" />
-                                        <p className="text-xs font-bold uppercase tracking-widest">AI analysis in progress...</p>
+                                        <p className="text-xs font-bold uppercase tracking-widest">
+                                            {timeLeft > 0 ? "Expert review cooling down..." : "Expert review ready to unlock"}
+                                        </p>
+                                        <p className="text-[10px] text-neutral-800 uppercase tracking-[0.2em] mt-2">
+                                            High-fidelity analysis requires processing cycles
+                                        </p>
                                     </div>
                                 )}
                             </div>
@@ -166,7 +235,11 @@ export default function ResponseDetail() {
                                         <section.icon className="w-4 h-4 text-neutral-600" />
                                         <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-widest">{section.label}</h3>
                                     </div>
-                                    <p className="text-sm text-neutral-500 leading-relaxed whitespace-pre-wrap">{section.value || "No input provided for this section."}</p>
+                                    {section.label === 'Architecture' && section.value.includes('graph') ? (
+                                        <MermaidRenderer code={section.value} />
+                                    ) : (
+                                        <p className="text-sm text-neutral-500 leading-relaxed whitespace-pre-wrap">{section.value || "No input provided for this section."}</p>
+                                    )}
                                 </div>
                             ))}
                         </div>

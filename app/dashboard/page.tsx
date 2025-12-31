@@ -36,6 +36,41 @@ export default function Dashboard() {
         { label: 'Current Streak', value: `${stats?.current_streak || 0}d`, icon: Trophy },
     ];
 
+    const calculateAverageBreakdown = () => {
+        if (!history || history.length === 0) return { clarity: 0, constraints: 0, trade_offs: 0, failure: 0, simplicity: 0 };
+
+        const totals = history.reduce((acc, resp) => {
+            if (!resp.score_breakdown) return acc;
+            acc.clarity += resp.score_breakdown.clarity || 0;
+            acc.constraints += resp.score_breakdown.constraints_awareness || 0;
+            acc.trade_offs += resp.score_breakdown.trade_off_reasoning || 0;
+            acc.failure += resp.score_breakdown.failure_anticipation || 0;
+            acc.simplicity += resp.score_breakdown.simplicity || 0;
+            return acc;
+        }, { clarity: 0, constraints: 0, trade_offs: 0, failure: 0, simplicity: 0 });
+
+        const count = history.filter(r => r.score_breakdown).length || 1;
+        return {
+            clarity: Math.round(totals.clarity / count * 10),
+            constraints: Math.round(totals.constraints / count * 10),
+            trade_offs: Math.round(totals.trade_offs / count * 10),
+            failure: Math.round(totals.failure / count * 10),
+        };
+    };
+
+    const averages = calculateAverageBreakdown();
+
+    const getRank = (score: number) => {
+        if (score >= 9) return "Principal Architect";
+        if (score >= 8) return "Senior Architect";
+        if (score >= 6) return "Systems Engineer";
+        if (score >= 4) return "Associate Engineer";
+        return "Novice Analyst";
+    };
+
+    const rank = getRank(stats?.average_score || 0);
+    const rankProgress = ((stats?.average_score || 0) / 10) * 100;
+
     return (
         <div className="space-y-10 py-4">
             {/* Stats Grid */}
@@ -162,18 +197,18 @@ export default function Dashboard() {
                             Skill Breakdown
                         </h3>
                         <div className="space-y-5">
-                            <SkillProgress label="Clarity" value={78} />
-                            <SkillProgress label="Constraints" value={64} />
-                            <SkillProgress label="Trade-offs" value={92} />
-                            <SkillProgress label="Failure" value={55} />
+                            <SkillProgress label="Clarity" value={averages.clarity} />
+                            <SkillProgress label="Constraints" value={averages.constraints} />
+                            <SkillProgress label="Trade-offs" value={averages.trade_offs} />
+                            <SkillProgress label="Failure" value={averages.failure} />
                         </div>
                         <div className="mt-8 pt-5 border-t border-white/5">
                             <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-widest mb-3">
                                 <span className="text-neutral-500">Overall Rank</span>
-                                <span className="text-white">Senior Architect</span>
+                                <span className="text-white">{rank}</span>
                             </div>
                             <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                                <div className="h-full bg-white w-[68%]" />
+                                <div className="h-full bg-white transition-all duration-1000" style={{ width: `${rankProgress}%` }} />
                             </div>
                         </div>
                     </section>
