@@ -17,10 +17,12 @@ import {
   Check,
   Star
 } from 'lucide-react';
+import { useUser } from '@/hooks/use-user';
 import Link from 'next/link';
 import React from 'react';
 
 export default function LandingPage() {
+  const { user, loading } = useUser();
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -60,10 +62,21 @@ export default function LandingPage() {
         <div className="h-4 w-px bg-white/10 hidden md:block" />
 
         <div className="flex items-center gap-4">
-          <Link href="/login" className="text-[13px] font-medium text-neutral-400 hover:text-white transition-colors">Sign in</Link>
-          <Link href="/signup" className="bg-white text-black py-1.5 px-3.5 rounded-full text-[13px] font-medium hover:bg-neutral-200 transition-colors">
-            Get started
-          </Link>
+          {!loading && !user ? (
+            <>
+              <Link href="/login" className="text-[13px] font-medium text-neutral-400 hover:text-white transition-colors">Sign in</Link>
+              <Link href="/signup" className="bg-white text-black py-1.5 px-3.5 rounded-full text-[13px] font-medium hover:bg-neutral-200 transition-colors">
+                Get started
+              </Link>
+            </>
+          ) : user ? (
+            <Link href="/dashboard" className="bg-white text-black py-1.5 px-5 rounded-full text-[13px] font-bold hover:bg-neutral-200 transition-colors flex items-center gap-2">
+              Dashboard
+              <ArrowRight className="w-3 h-3" />
+            </Link>
+          ) : (
+            <div className="w-20 h-8 rounded-full bg-white/5 animate-pulse" />
+          )}
         </div>
       </nav>
 
@@ -92,8 +105,8 @@ export default function LandingPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4">
-              <Link href="/signup" className="w-full sm:w-auto bg-white text-black py-3.5 px-8 rounded-full text-sm font-semibold hover:bg-neutral-200 transition-all flex items-center justify-center gap-2">
-                Start Training
+              <Link href={user ? "/dashboard" : "/signup"} className="w-full sm:w-auto bg-white text-black py-3.5 px-8 rounded-full text-sm font-semibold hover:bg-neutral-200 transition-all flex items-center justify-center gap-2">
+                {user ? "Resume Session" : "Start Training"}
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <div className="flex items-center gap-2 text-sm text-neutral-400 font-medium">

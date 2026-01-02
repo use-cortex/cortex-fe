@@ -1,16 +1,25 @@
 "use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { Zap, Mail, Lock, ArrowRight, User, Briefcase, Loader2, ChevronLeft } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useUser } from '@/hooks/use-user';
 import api from '@/lib/api';
+import { motion } from 'framer-motion';
+import { ArrowRight, ChevronLeft, Loader2, Zap } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
 export default function AuthPage({ mode = 'login' }: { mode?: 'login' | 'signup' }) {
     const router = useRouter();
+    const { user, loading: userLoading } = useUser();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!userLoading && user) {
+            router.push('/dashboard');
+        }
+    }, [user, userLoading, router]);
+
     const [formData, setFormData] = useState({
         email: '',
         password: '',

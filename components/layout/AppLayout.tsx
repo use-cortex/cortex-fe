@@ -1,23 +1,23 @@
 "use client";
 
-import React, { useState } from 'react';
+import { useProgress } from '@/hooks/use-progress';
+import { useUser } from '@/hooks/use-user';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+    BrainCircuit,
+    Globe,
+    LayoutDashboard,
+    LogOut,
+    Menu,
+    ShieldCheck,
+    Terminal,
+    Trophy,
+    User,
+    Zap
+} from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useUser } from '@/hooks/use-user';
-import { useProgress } from '@/hooks/use-progress';
-import {
-    LayoutDashboard,
-    Terminal,
-    BrainCircuit,
-    Trophy,
-    LogOut,
-    User,
-    Zap,
-    Menu,
-    X,
-    ShieldCheck
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from 'react';
 
 const sidebarItems = [
     { name: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
@@ -57,8 +57,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     }
 
     return (
-        <div className="flex min-h-screen bg-black text-white overflow-hidden">
-            <div className="bg-gradient" />
+        <div className="flex min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans">
+            <div className="fixed inset-0 dot-pattern opacity-40 pointer-events-none" />
 
             {/* Mobile Menu Overlay */}
             <AnimatePresence>
@@ -68,7 +68,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={() => setMobileMenuOpen(false)}
-                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+                        className="fixed inset-0 bg-black/80 backdrop-blur-md z-[60] lg:hidden"
                     />
                 )}
             </AnimatePresence>
@@ -77,39 +77,37 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <motion.aside
                 initial={false}
                 animate={{
-                    width: isSidebarOpen ? '220px' : '72px',
+                    width: isSidebarOpen ? '260px' : '88px',
                     x: isMobileMenuOpen ? 0 : (typeof window !== 'undefined' && window.innerWidth < 1024 ? -300 : 0)
                 }}
-                className={`fixed lg:relative z-50 h-screen flex flex-col bg-black border-r border-white/5 transition-all duration-300`}
+                className={`fixed lg:relative z-[70] h-screen flex flex-col bg-black border-r border-white/[0.05] transition-all duration-300 shadow-[20px_0_50px_rgba(0,0,0,0.5)]`}
             >
-                <div className="p-5 flex items-center justify-between">
-                    <div className="flex items-center gap-2.5 overflow-hidden">
-                        <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shrink-0">
-                            <Zap className="w-5 h-5 text-black fill-black" />
-                        </div>
-                        {isSidebarOpen && (
-                            <span className="font-bold text-lg tracking-tighter text-white">
-                                CORTEX
-                            </span>
-                        )}
+                <div className="p-8 flex items-center gap-3 overflow-hidden">
+                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                        <Zap className="w-6 h-6 text-black fill-black" />
                     </div>
+                    {isSidebarOpen && (
+                        <span className="font-black text-xl tracking-tighter text-white">
+                            CORTEX
+                        </span>
+                    )}
                 </div>
 
-                <nav className="flex-1 px-3 py-4 space-y-1">
+                <nav className="flex-1 px-4 py-8 space-y-2">
                     {sidebarItems.map((item) => {
                         const isActive = pathname === item.href;
                         return (
                             <Link key={item.name} href={item.href}>
                                 <div className={`
-                  flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 group
-                  ${isActive
-                                        ? 'bg-white/10 text-white'
-                                        : 'text-neutral-500 hover:bg-neutral-900 hover:text-neutral-200'
+                                    flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 group
+                                    ${isActive
+                                        ? 'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.1)]'
+                                        : 'text-neutral-500 hover:text-white hover:bg-white/5'
                                     }
-                `}>
-                                    <item.icon className="w-4.5 h-4.5 shrink-0" />
+                                `}>
+                                    <item.icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-black' : ''}`} />
                                     {isSidebarOpen && (
-                                        <span className="text-[13px] font-medium whitespace-nowrap">{item.name}</span>
+                                        <span className="text-[13px] font-bold uppercase tracking-widest whitespace-nowrap">{item.name}</span>
                                     )}
                                 </div>
                             </Link>
@@ -119,77 +117,88 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     {user?.is_admin && (
                         <Link href="/admin">
                             <div className={`
-                  flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 group
-                  ${pathname === '/admin'
-                                    ? 'bg-white/10 text-white'
-                                    : 'text-neutral-500 hover:bg-neutral-900 hover:text-neutral-200'
+                                flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 group
+                                ${pathname === '/admin'
+                                    ? 'bg-amber-500 text-black shadow-[0_0_20px_rgba(245,158,11,0.2)]'
+                                    : 'text-amber-500/60 hover:text-amber-500 hover:bg-amber-500/5'
                                 }
-                `}>
-                                <ShieldCheck className="w-4.5 h-4.5 shrink-0 text-amber-500/80" />
+                            `}>
+                                <ShieldCheck className="w-5 h-5 shrink-0" />
                                 {isSidebarOpen && (
-                                    <span className="text-[13px] font-medium whitespace-nowrap">Admin Panel</span>
+                                    <span className="text-[13px] font-bold uppercase tracking-widest whitespace-nowrap">Admin Core</span>
                                 )}
                             </div>
                         </Link>
                     )}
                 </nav>
 
-                <div className="p-3 border-t border-white/5 space-y-1">
+                {/* Secure Environment Badge */}
+                {isSidebarOpen && (
+                    <div className="mx-6 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.05] mb-6">
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-neutral-400">Environment Secure</span>
+                        </div>
+                        <p className="text-[10px] text-neutral-600 font-medium leading-relaxed">
+                            Encrypted session active via Cortex Shield-v2
+                        </p>
+                    </div>
+                )}
+
+                <div className="p-4 border-t border-white/[0.05] space-y-2">
                     <Link href="/profile">
                         <div className={`
-              flex items-center gap-3 px-3 py-2 rounded-lg text-neutral-500 hover:bg-neutral-900 hover:text-neutral-200 transition-all group
-              ${isSidebarOpen ? '' : 'justify-center'}
-            `}>
-                            <User className="w-4.5 h-4.5 shrink-0" />
-                            {isSidebarOpen && <span className="text-[13px] font-medium">Profile</span>}
+                            flex items-center gap-4 px-4 py-3 rounded-2xl text-neutral-500 hover:bg-white/5 hover:text-white transition-all group
+                            ${isSidebarOpen ? '' : 'justify-center'}
+                        `}>
+                            <User className="w-5 h-5 shrink-0" />
+                            {isSidebarOpen && <span className="text-[13px] font-bold uppercase tracking-widest">Profile</span>}
                         </div>
                     </Link>
                     <button
                         onClick={handleLogout}
                         className={`
-            flex items-center gap-3 px-3 py-2 rounded-lg text-neutral-500 hover:bg-white/5 hover:text-white transition-all group w-full cursor-pointer
-            ${isSidebarOpen ? '' : 'justify-center'}
-          `}>
-                        <LogOut className="w-4.5 h-4.5 shrink-0" />
-                        {isSidebarOpen && <span className="text-[13px] font-medium">Logout</span>}
+                            flex items-center gap-4 px-4 py-3 rounded-2xl text-neutral-500 hover:bg-red-500/10 hover:text-red-500 transition-all group w-full cursor-pointer
+                            ${isSidebarOpen ? '' : 'justify-center'}
+                        `}>
+                        <LogOut className="w-5 h-5 shrink-0" />
+                        {isSidebarOpen && <span className="text-[13px] font-bold uppercase tracking-widest">Terminate</span>}
                     </button>
                 </div>
             </motion.aside>
 
             {/* Main Content */}
-            <main className="flex-1 flex flex-col h-screen overflow-hidden">
+            <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
                 {/* Header */}
-                <header className="h-14 flex items-center justify-between px-6 border-b border-white/5 bg-black z-30 shrink-0">
-                    <div className="flex items-center gap-4">
+                <header className="h-20 flex items-center justify-between px-10 border-b border-white/[0.05] bg-black/50 backdrop-blur-xl z-[50] shrink-0">
+                    <div className="flex items-center gap-6">
                         <button
-                            onClick={() => setMobileMenuOpen(true)}
-                            className="lg:hidden p-2 -ml-2 text-neutral-400 hover:text-white"
+                            onClick={() => {
+                                if (window.innerWidth < 1024) setMobileMenuOpen(true);
+                                else setSidebarOpen(!isSidebarOpen);
+                            }}
+                            className="p-3 -ml-3 text-neutral-500 hover:text-white hover:bg-white/5 rounded-xl transition-all"
                         >
                             <Menu className="w-5 h-5" />
                         </button>
-                        <button
-                            onClick={() => setSidebarOpen(!isSidebarOpen)}
-                            className="hidden lg:flex p-2 -ml-2 text-neutral-400 hover:text-white transition-colors"
-                        >
-                            <Menu className="w-5 h-5" />
-                        </button>
-                        <h1 className="text-sm font-semibold text-neutral-200">
-                            {sidebarItems.find(i => i.href === pathname)?.name || 'Cortex'}
+                        <div className="h-6 w-px bg-white/10 hidden md:block" />
+                        <h1 className="text-xs font-black uppercase tracking-[0.3em] text-neutral-400">
+                            {sidebarItems.find(i => i.href === pathname)?.name || 'Cortex Core'}
                         </h1>
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white text-[11px] font-bold">
-                            <Zap className="w-3.5 h-3.5 fill-white" />
-                            <span>{stats?.current_streak || 0} DAY STREAK</span>
+                    <div className="flex items-center gap-6">
+                        <div className="hidden xl:flex items-center gap-3 pr-6 border-r border-white/10">
+                            <Globe className="w-4 h-4 text-neutral-600" />
+                            <span className="text-[10px] font-black uppercase tracking-widest text-neutral-500">Region: Global_Edge</span>
                         </div>
 
-                        <div className="flex items-center gap-3 pl-4 border-l border-white/10">
-                            <div className="text-right hidden sm:block">
-                                <p className="text-[12px] font-semibold text-neutral-200 leading-none">{user?.full_name || 'Architect'}</p>
-                                <p className="text-[10px] text-neutral-500 mt-1">{user?.selected_role || userRank}</p>
+                        <div className="flex items-center gap-5">
+                            <div className="text-right hidden md:block">
+                                <p className="text-[12px] font-black text-white leading-none uppercase tracking-widest">{user?.full_name || 'Architect'}</p>
+                                <p className="text-[9px] text-neutral-500 mt-1.5 font-bold uppercase tracking-wider">{user?.selected_role || userRank}</p>
                             </div>
-                            <div className="w-8 h-8 rounded-full bg-neutral-900 border border-white/10 flex items-center justify-center text-white text-[10px] font-black uppercase">
+                            <div className="w-10 h-10 rounded-xl bg-neutral-900 border border-white/10 flex items-center justify-center text-white text-xs font-black uppercase shadow-xl ring-1 ring-white/10">
                                 {user?.full_name ? user.full_name.split(' ').map(n => n[0]).join('') : 'EX'}
                             </div>
                         </div>
@@ -197,15 +206,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </header>
 
                 {/* Scrollable Area */}
-                <div className="flex-1 overflow-y-auto overflow-x-hidden p-6">
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="w-full"
-                    >
-                        {children}
-                    </motion.div>
+                <div className="flex-1 overflow-y-auto overflow-x-hidden relative custom-scrollbar">
+                    <div className="p-10 max-w-[1600px] mx-auto w-full">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                            className="w-full"
+                        >
+                            {children}
+                        </motion.div>
+                    </div>
                 </div>
             </main>
         </div>

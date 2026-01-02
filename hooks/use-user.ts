@@ -10,14 +10,25 @@ export function useUser() {
     const [error, setError] = useState<string | null>(null);
 
     const fetchUser = async () => {
+        const token = typeof window !== 'undefined' ? localStorage.getItem('cortex_token') : null;
+        if (!token) {
+            setLoading(false);
+            return;
+        }
+
         try {
             setLoading(true);
-            const response = await api.get('/users/profile');
+            const response = await api.get('/auth/me');
             setUser(response.data);
             setError(null);
         } catch (err: any) {
             console.error('Failed to fetch user:', err);
             setError(err.response?.data?.detail || 'Failed to load profile');
+            // If token is invalid, clear it
+            if (err.response?.status === 401) {
+                localStorage.removeItem('cortex_token');
+                setUser(null);
+            }
         } finally {
             setLoading(false);
         }
