@@ -39,6 +39,10 @@
     line-height: 1.6;
     overflow-x: hidden;
   }
+
+  button {
+    cursor: pointer;
+  }
 }
 
 .container-center {

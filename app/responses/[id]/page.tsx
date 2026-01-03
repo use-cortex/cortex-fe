@@ -8,16 +8,22 @@ import {
     ArrowLeft,
     BrainCircuit,
     Clock,
+    Download,
     Layers,
     Lightbulb,
     Loader2,
     Lock,
+    Maximize2,
     Shield,
     ShieldAlert,
     Target,
     TrendingUp,
+    X,
     Zap
 } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -31,6 +37,7 @@ export default function ResponseDetail() {
     const [loading, setLoading] = useState(true);
     const [requestingFeedback, setRequestingFeedback] = useState(false);
     const [timeLeft, setTimeLeft] = useState<number>(0);
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -207,8 +214,25 @@ export default function ResponseDetail() {
                             </div>
                             <div className="relative z-10 prose prose-invert prose-lg max-w-none">
                                 {response.ai_feedback ? (
-                                    <div className="whitespace-pre-wrap font-medium text-neutral-300 leading-[1.8] text-[16px]">
-                                        {response.ai_feedback}
+                                    <div className="text-neutral-300 space-y-4">
+                                        <ReactMarkdown 
+                                            remarkPlugins={[remarkGfm]}
+                                            components={{
+                                                h1: ({node, ...props}) => <h1 className="text-2xl font-black text-white uppercase tracking-tight mt-6 mb-4" {...props} />,
+                                                h2: ({node, ...props}) => <h2 className="text-lg font-black text-white uppercase tracking-widest mt-6 mb-3 border-b border-white/10 pb-2 flex items-center gap-2" {...props} />,
+                                                h3: ({node, ...props}) => <h3 className="text-sm font-bold text-white mt-4 mb-2 uppercase tracking-wider" {...props} />,
+                                                p: ({node, ...props}) => <p className="leading-relaxed text-[15px] font-medium" {...props} />,
+                                                ul: ({node, ...props}) => <ul className="list-disc pl-5 space-y-2 my-4 marker:text-emerald-500" {...props} />,
+                                                ol: ({node, ...props}) => <ol className="list-decimal pl-5 space-y-2 my-4 marker:text-emerald-500" {...props} />,
+                                                li: ({node, ...props}) => <li className="pl-1" {...props} />,
+                                                blockquote: ({node, ...props}) => <blockquote className="border-l-2 border-emerald-500 pl-4 py-1 my-4 bg-emerald-500/5 italic text-emerald-400 rounded-r-lg" {...props} />,
+                                                strong: ({node, ...props}) => <strong className="text-white font-bold" {...props} />,
+                                                code: ({node, ...props}) => <code className="bg-white/10 px-1.5 py-0.5 rounded text-sm font-mono text-emerald-400" {...props} />,
+                                                pre: ({node, ...props}) => <pre className="bg-black/50 p-4 rounded-xl overflow-x-auto border border-white/10 my-4" {...props} />,
+                                            }}
+                                        >
+                                            {response.ai_feedback}
+                                        </ReactMarkdown>
                                     </div>
                                 ) : (
                                     <div className="flex flex-col items-center py-20">
@@ -242,12 +266,33 @@ export default function ResponseDetail() {
                                         <h3 className="text-[11px] font-black text-neutral-400 uppercase tracking-[0.2em]">{section.label}</h3>
                                     </div>
                                     {section.label === 'System Topology' && response.architecture_image ? (
-                                        <div className="bg-black/40 rounded-3xl p-8 border border-white/5 flex justify-center backdrop-blur-3xl">
-                                            <img
-                                                src={response.architecture_image}
-                                                alt="System Architecture"
-                                                className="max-h-[600px] w-auto h-auto object-contain rounded-xl shadow-2xl"
+                                        <div
+                                            className="relative group/image bg-[#0a0a0a] rounded-3xl overflow-hidden border border-white/5 shadow-2xl cursor-zoom-in"
+                                            onClick={() => setIsImageModalOpen(true)}
+                                        >
+                                            {/* Grid Pattern Background to match Excalidraw Dark Mode */}
+                                            <div className="absolute inset-0 opacity-[0.05]"
+                                                style={{
+                                                    backgroundImage: 'linear-gradient(#404040 1px, transparent 1px), linear-gradient(90deg, #404040 1px, transparent 1px)',
+                                                    backgroundSize: '20px 20px'
+                                                }}
                                             />
+
+                                            <div className="relative p-8 flex justify-center">
+                                                <img
+                                                    src={response.architecture_image}
+                                                    alt="System Architecture"
+                                                    className="relative z-10 max-h-[600px] w-auto h-auto object-contain rounded-sm shadow-lg transition-transform duration-500 group-hover/image:scale-[1.02]"
+                                                />
+                                            </div>
+
+                                            <div className="absolute top-4 right-4 flex items-center gap-2 opacity-0 group-hover/image:opacity-100 transition-all z-20">
+                                                <button
+                                                    className="p-3 bg-neutral-900/80 hover:bg-neutral-800 text-white rounded-xl backdrop-blur-md border border-white/10 shadow-xl"
+                                                >
+                                                    <Maximize2 className="w-5 h-5" />
+                                                </button>
+                                            </div>
                                         </div>
                                     ) : section.label === 'System Topology' && section.value.includes('graph') ? (
                                         <div className="bg-black/20 rounded-3xl p-8 border border-white/5 backdrop-blur-xl">
@@ -306,6 +351,57 @@ export default function ResponseDetail() {
                     </div>
                 </div>
             </div>
+
+            <AnimatePresence>
+                {isImageModalOpen && response?.architecture_image && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setIsImageModalOpen(false)}
+                        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-2xl p-6 md:p-12"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="relative max-w-full max-h-full w-full h-full flex items-center justify-center bg-[#0a0a0a] rounded-3xl border border-white/10 overflow-hidden"
+                        >
+                            {/* Grid Pattern Background */}
+                            <div className="absolute inset-0 opacity-[0.05]"
+                                style={{
+                                    backgroundImage: 'linear-gradient(#404040 1px, transparent 1px), linear-gradient(90deg, #404040 1px, transparent 1px)',
+                                    backgroundSize: '20px 20px'
+                                }}
+                            />
+
+                            <div className="absolute top-6 right-6 flex items-center gap-3 z-50">
+                                <a
+                                    href={response.architecture_image}
+                                    download={`architecture-${responseId.slice(-8)}.png`}
+                                    className="p-3 bg-neutral-900/80 hover:bg-neutral-800 text-white rounded-xl backdrop-blur-md border border-white/10 shadow-xl transition-all"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <Download className="w-5 h-5" />
+                                </a>
+                                <button
+                                    onClick={() => setIsImageModalOpen(false)}
+                                    className="p-3 bg-neutral-900/80 hover:bg-red-500/10 hover:text-red-500 text-white rounded-xl backdrop-blur-md border border-white/10 shadow-xl transition-all"
+                                >
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
+
+                            <img
+                                src={response.architecture_image}
+                                alt="System Architecture Fullscreen"
+                                className="relative z-10 w-full h-full object-contain p-8 md:p-16"
+                            />
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

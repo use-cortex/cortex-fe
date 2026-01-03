@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
 import api from '@/lib/api';
 import { ProgressStats, TaskResponse } from '@/lib/types';
+import { useEffect, useState } from 'react';
 
 export function useProgress() {
     const [stats, setStats] = useState<ProgressStats | null>(null);

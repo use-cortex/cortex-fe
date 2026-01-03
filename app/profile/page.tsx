@@ -1,22 +1,22 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useProgress } from '@/hooks/use-progress';
+import { useUser } from '@/hooks/use-user';
+import { Role, User as UserType } from '@/lib/types';
+import { motion } from 'framer-motion';
 import {
-    User,
-    Mail,
     Briefcase,
     Calendar,
-    ShieldCheck,
+    CheckCircle2,
     Edit2,
-    Save,
-    X,
     Loader2,
-    CheckCircle2
+    Mail,
+    Save,
+    ShieldCheck,
+    User,
+    X
 } from 'lucide-react';
-import { useUser } from '@/hooks/use-user';
-import { useProgress } from '@/hooks/use-progress';
-import { User as UserType, Role } from '@/lib/types';
+import { useEffect, useState } from 'react';
 
 export default function ProfilePage() {
     const { user, loading, updateUser } = useUser();

@@ -1,28 +1,27 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import ArchitectureEditor from '@/components/ArchitectureEditor';
+import api from '@/lib/api';
+import { Task } from '@/lib/types';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
     ArrowLeft,
-    Send,
-    Clock,
-    ShieldAlert,
-    Lightbulb,
-    Layers,
-    Timer,
     BrainCircuit,
+    Clock,
+    Layers,
+    Lightbulb,
     Loader2,
+    Lock,
     Maximize2,
     Minimize2,
-    Sparkles,
-    Lock,
-    Shield
+    Send,
+    Shield,
+    ShieldAlert,
+    Timer
 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import api from '@/lib/api';
-import { Task } from '@/lib/types';
-import ArchitectureEditor from '@/components/ArchitectureEditor';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 const steps = [

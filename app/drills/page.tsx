@@ -1,19 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import api from '@/lib/api';
+import { Drill } from '@/lib/types';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
     BrainCircuit,
     CheckCircle2,
-    XCircle,
     ChevronRight,
-    Loader2,
     Info,
-    Trophy
+    Loader2,
+    XCircle
 } from 'lucide-react';
-import api from '@/lib/api';
-import { Drill } from '@/lib/types';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function DrillsPage() {
     const [drill, setDrill] = useState<Drill | null>(null);
@@ -183,7 +182,7 @@ export default function DrillsPage() {
                         </div>
 
                         <div className="flex gap-3 relative z-10">
-                             <button
+                            <button
                                 onClick={fetchDrill}
                                 className="flex-1 py-3 rounded-lg bg-white text-black text-[11px] font-black uppercase tracking-widest hover:bg-neutral-200 transition-colors flex items-center justify-center gap-2"
                             >

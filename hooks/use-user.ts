@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from 'react';
 import api from '@/lib/api';
 import { User } from '@/lib/types';
+import { useEffect, useState } from 'react';
 
 export function useUser() {
     const [user, setUser] = useState<User | null>(null);

@@ -1,20 +1,17 @@
 "use client";
 
-import React, { useState } from 'react';
+import { useTasks } from '@/hooks/use-tasks';
 import { motion } from 'framer-motion';
 import {
-    Search,
-    Filter,
-    Clock,
-    BarChart2,
     ArrowRight,
     ChevronDown,
-    Lock,
+    Clock,
+    Loader2,
     MessageSquare,
-    Loader2
+    Search
 } from 'lucide-react';
-import { useTasks } from '@/hooks/use-tasks';
 import Link from 'next/link';
+import { useState } from 'react';
 
 const roles = ['All Roles', 'Backend Engineer', 'Frontend Engineer', 'Systems Engineer', 'Data Engineer'];
 const difficulties = ['All Levels', 'Beginner', 'Intermediate', 'Advanced'];

@@ -80,7 +80,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     width: isSidebarOpen ? '260px' : '88px',
                     x: isMobileMenuOpen ? 0 : (typeof window !== 'undefined' && window.innerWidth < 1024 ? -300 : 0)
                 }}
-                className={`fixed lg:relative z-[70] h-screen flex flex-col bg-black border-r border-white/[0.05] transition-all duration-300 shadow-[20px_0_50px_rgba(0,0,0,0.5)]`}
+                className={`fixed lg:relative z-[70] h-screen flex flex-col bg-black border-r border-white/[0.05] transition-all duration-300 shadow-[20px_0_50px_rgba(0,0,0,0.5)] overflow-hidden`}
             >
                 <div className="p-8 flex items-center gap-3 overflow-hidden">
                     <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(255,255,255,0.2)]">

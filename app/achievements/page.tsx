@@ -1,13 +1,12 @@
 "use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Trophy, Star, Shield, Zap, Target, Loader2 } from 'lucide-react';
 import { useProgress } from '@/hooks/use-progress';
+import { motion } from 'framer-motion';
+import { BrainCircuitIcon, Loader2, Shield, Star, Target, Trophy, Zap } from 'lucide-react';
 
 const achievementsList = [
     { id: 1, title: 'First Analysis', desc: 'Successfully submitted your first engineering task.', icon: Zap, unlocked: true },
-    { id: 2, title: 'Thinker Level 5', desc: 'Achieved an average think score above 8.0.', icon: BrainCircuit, unlocked: true },
+    { id: 2, title: 'Thinker Level 5', desc: 'Achieved an average think score above 8.0.', icon: BrainCircuitIcon, unlocked: true },
     { id: 3, title: 'Streak Master', desc: 'Maintained a 7-day training streak.', icon: Star, unlocked: false },
     { id: 4, title: 'System Architect', desc: 'Completed 10 advanced difficulty tasks.', icon: Shield, unlocked: false },
     { id: 5, title: 'Drill Sergeant', desc: 'Achieved 100% accuracy in 5 consecutive drills.', icon: Target, unlocked: false },

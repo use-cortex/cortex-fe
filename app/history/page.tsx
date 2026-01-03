@@ -1,20 +1,18 @@
 "use client";
 
-import React from 'react';
+import { useProgress } from '@/hooks/use-progress';
 import { motion } from 'framer-motion';
 import {
     ArrowLeft,
-    Calendar,
     ArrowUpRight,
-    CheckCircle2,
     BrainCircuit,
-    Search,
-    Loader2,
+    Calendar,
     Database,
+    Loader2,
+    Search,
     Shield
 } from 'lucide-react';
 import Link from 'next/link';
-import { useProgress } from '@/hooks/use-progress';
 
 export default function HistoryPage() {
     const { history, loading } = useProgress();

@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
-import { Inter, Instrument_Serif } from "next/font/google";
-import "./globals.css";
-import "@excalidraw/excalidraw/index.css";
 import AppLayout from "@/components/layout/AppLayout";
+import "@excalidraw/excalidraw/index.css";
+import type { Metadata } from "next";
+import { Instrument_Serif, Inter } from "next/font/google";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const instrumentSerif = Instrument_Serif({

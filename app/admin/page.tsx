@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from '@/hooks/use-user';
 import api from '@/lib/api';
 import {
     AlertCircle,
@@ -14,9 +15,8 @@ import {
     Users,
     Zap
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { useUser } from '@/hooks/use-user';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 interface AdminStats {
     total_users: number;

@@ -1,42 +1,22 @@
 "use client";
 
+import { useUser } from '@/hooks/use-user';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
   BrainCircuit,
+  ChevronRight,
   Cpu,
-  ShieldCheck,
+  Plus,
+  Star,
   Target,
   Trophy,
-  User,
-  Zap,
-  ChevronRight,
-  Plus,
-  ArrowUpRight,
-  Search,
-  Check,
-  Star
+  Zap
 } from 'lucide-react';
-import { useUser } from '@/hooks/use-user';
 import Link from 'next/link';
-import React from 'react';
 
 export default function LandingPage() {
   const { user, loading } = useUser();
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  };
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black overflow-x-hidden font-sans">
