@@ -29,11 +29,37 @@ export default function Dashboard() {
         );
     }
 
+    // Calculate weekly tasks completed
+    const weeklyTasks = history.filter(resp => {
+        const submittedDate = new Date(resp.submitted_at);
+        const weekAgo = new Date();
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        return submittedDate >= weekAgo;
+    }).length;
+
+    // Calculate user level from total score (every 100 points = 1 level)
+    const userLevel = Math.floor((stats?.total_score || 0) / 100) + 1;
+
+    // Determine streak status
+    const currentStreak = stats?.current_streak ?? 0;
+    const longestStreak = stats?.longest_streak ?? 0;
+    const isPersonalBest = currentStreak === longestStreak && currentStreak > 0;
+    const streakTrend = isPersonalBest ? 'Personal Best' : longestStreak > 0 ? `Best: ${longestStreak}` : 'Just Started';
+
+    // Calculate percentile (simplified: based on average score)
+    const getPercentile = (avgScore: number) => {
+        if (avgScore >= 9) return 'Top 1%';
+        if (avgScore >= 8) return 'Top 5%';
+        if (avgScore >= 7) return 'Top 10%';
+        if (avgScore >= 6) return 'Top 25%';
+        return 'Growing';
+    };
+
     const statCards = [
-        { label: 'Analyses Deployed', value: stats?.total_tasks_completed || 0, icon: CheckCircle2, trend: '+2 this week' },
-        { label: 'Architectural Index', value: stats?.average_score?.toFixed(1) || '0.0', icon: Target, trend: 'Top 5%' },
-        { label: 'Cumulative XP', value: stats?.total_score?.toFixed(0) || 0, icon: BrainCircuit, trend: 'Level 14' },
-        { label: 'Thinking Streak', value: `${stats?.current_streak || 0} Days`, icon: Trophy, trend: 'Personal Best' },
+        { label: 'Analyses Deployed', value: stats?.total_tasks_completed || 0, icon: CheckCircle2, trend: weeklyTasks > 0 ? `+${weeklyTasks} this week` : 'No activity' },
+        { label: 'Architectural Index', value: stats?.average_score?.toFixed(1) || '0.0', icon: Target, trend: getPercentile(stats?.average_score || 0) },
+        { label: 'Cumulative XP', value: stats?.total_score?.toFixed(0) || 0, icon: BrainCircuit, trend: `Level ${userLevel}` },
+        { label: 'Thinking Streak', value: `${stats?.current_streak || 0} Days`, icon: Trophy, trend: streakTrend },
     ];
 
     const calculateAverageBreakdown = () => {
@@ -71,6 +97,32 @@ export default function Dashboard() {
     const rank = getRank(stats?.average_score || 0);
     const rankProgress = ((stats?.average_score || 0) / 10) * 100;
 
+    // Calculate improvement percentage by comparing recent vs older performance
+    const calculateImprovement = () => {
+        if (!history || history.length < 2) return null;
+
+        // Sort by date
+        const sortedHistory = [...history].sort((a, b) =>
+            new Date(a.submitted_at).getTime() - new Date(b.submitted_at).getTime()
+        );
+
+        // Split into two halves
+        const midpoint = Math.floor(sortedHistory.length / 2);
+        const olderHalf = sortedHistory.slice(0, midpoint);
+        const recentHalf = sortedHistory.slice(midpoint);
+
+        // Calculate averages
+        const olderAvg = olderHalf.reduce((sum, r) => sum + (r.score || 0), 0) / olderHalf.length;
+        const recentAvg = recentHalf.reduce((sum, r) => sum + (r.score || 0), 0) / recentHalf.length;
+
+        if (olderAvg === 0) return null;
+
+        const improvement = ((recentAvg - olderAvg) / olderAvg) * 100;
+        return Math.round(improvement);
+    };
+
+    const improvement = calculateImprovement();
+
     return (
         <div className="space-y-12 pb-10">
             {/* Upper Section with Banner */}
@@ -82,14 +134,23 @@ export default function Dashboard() {
                     <div>
                         <div className="flex items-center gap-3 mb-4">
                             <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-black uppercase tracking-widest border border-emerald-500/20">System Online</span>
-                            <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">v2.4.0 Patch Applied</span>
                         </div>
                         <h1 className="text-4xl md:text-5xl font-black text-white leading-[1.1] tracking-tighter mb-4">
                             Welcome back, <br />
                             Architect <span className="text-neutral-500">0x{stats?.user_id?.slice(-4) || '7E2'}</span>
                         </h1>
                         <p className="text-neutral-400 max-w-lg text-sm font-medium leading-relaxed">
-                            Your architectural reasoning has improved by <span className="text-white">12%</span> since last month. Keep pushing the boundaries of system design.
+                            {improvement !== null ? (
+                                improvement > 0 ? (
+                                    <>Your architectural reasoning has improved by <span className="text-white">{improvement}%</span> over time. Keep pushing the boundaries of system design.</>
+                                ) : improvement < 0 ? (
+                                    <>Your recent scores show room for growth. Review your feedback and keep practicing to improve your architectural reasoning.</>
+                                ) : (
+                                    <>Your performance has been consistent. Challenge yourself with more complex scenarios to level up your architectural reasoning.</>
+                                )
+                            ) : (
+                                <>Complete more tasks to track your improvement and unlock personalized insights into your architectural reasoning journey.</>
+                            )}
                         </p>
                     </div>
 

@@ -4,16 +4,8 @@ import { useProgress } from '@/hooks/use-progress';
 import { motion } from 'framer-motion';
 import { BrainCircuitIcon, Loader2, Shield, Star, Target, Trophy, Zap } from 'lucide-react';
 
-const achievementsList = [
-    { id: 1, title: 'First Analysis', desc: 'Successfully submitted your first engineering task.', icon: Zap, unlocked: true },
-    { id: 2, title: 'Thinker Level 5', desc: 'Achieved an average think score above 8.0.', icon: BrainCircuitIcon, unlocked: true },
-    { id: 3, title: 'Streak Master', desc: 'Maintained a 7-day training streak.', icon: Star, unlocked: false },
-    { id: 4, title: 'System Architect', desc: 'Completed 10 advanced difficulty tasks.', icon: Shield, unlocked: false },
-    { id: 5, title: 'Drill Sergeant', desc: 'Achieved 100% accuracy in 5 consecutive drills.', icon: Target, unlocked: false },
-];
-
 export default function AchievementsPage() {
-    const { loading } = useProgress();
+    const { stats, loading } = useProgress();
 
     if (loading) {
         return (
@@ -22,6 +14,45 @@ export default function AchievementsPage() {
             </div>
         );
     }
+
+    // Calculate achievement unlock status based on actual stats
+    const achievementsList = [
+        {
+            id: 1,
+            title: 'First Analysis',
+            desc: 'Successfully submitted your first engineering task.',
+            icon: Zap,
+            unlocked: (stats?.total_tasks_completed || 0) >= 1
+        },
+        {
+            id: 2,
+            title: 'Thinker Level 5',
+            desc: 'Achieved an average think score above 8.0.',
+            icon: BrainCircuitIcon,
+            unlocked: (stats?.average_score || 0) >= 8.0
+        },
+        {
+            id: 3,
+            title: 'Streak Master',
+            desc: 'Maintained a 7-day training streak.',
+            icon: Star,
+            unlocked: (stats?.current_streak || 0) >= 7 || (stats?.longest_streak || 0) >= 7
+        },
+        {
+            id: 4,
+            title: 'System Architect',
+            desc: 'Completed 10 advanced difficulty tasks.',
+            icon: Shield,
+            unlocked: (stats?.total_tasks_completed || 0) >= 10
+        },
+        {
+            id: 5,
+            title: 'Drill Sergeant',
+            desc: 'Achieved 100% accuracy in 5 consecutive drills.',
+            icon: Target,
+            unlocked: false // This would need drill stats to be implemented
+        },
+    ];
 
     return (
         <div className="max-w-4xl mx-auto py-8">
