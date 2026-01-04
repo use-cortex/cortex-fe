@@ -61,7 +61,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-44 pb-32 px-6 overflow-hidden">
+      <section className="relative pt-44 pb-40 px-6 overflow-hidden bg-gradient-to-b from-black via-black to-neutral-950">
         <div className="container-center grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -69,19 +69,17 @@ export default function LandingPage() {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[12px] font-medium mb-8">
-              <span className="flex h-2 w-2 rounded-full bg-white" />
-              Engineers thinking lab
-              <ChevronRight className="w-3 h-3 text-neutral-500" />
+              <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              Platform for Engineering Excellence
             </div>
 
             <h1 className="text-5xl md:text-7xl mb-8 font-serif-title leading-[1.05] text-white">
-              Master <br />
-              Architectural <br />
-              <span className="italic">Reasoning</span>.
+              Think Like a <br />
+              <span className="italic">Staff Engineer</span>.
             </h1>
 
             <p className="text-lg md:text-xl text-neutral-400 max-w-md mb-10 leading-relaxed font-normal">
-              A premium training ground for systems engineers to sharpen decision-making through high-fidelity architectural scenarios.
+              Practice high-stakes architectural decisions in a risk-free environment. Build the judgment that defines senior engineering roles.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -89,14 +87,6 @@ export default function LandingPage() {
                 {user ? "Resume Session" : "Start Training"}
                 <ArrowRight className="w-4 h-4" />
               </Link>
-              <div className="flex items-center gap-2 text-sm text-neutral-400 font-medium">
-                <div className="flex -space-x-2">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className="w-8 h-8 rounded-full bg-neutral-800 border-2 border-black flex items-center justify-center text-[10px] font-bold">JD</div>
-                  ))}
-                </div>
-                <span className="ml-2">Trusted by 2.5k architects</span>
-              </div>
             </div>
           </motion.div>
 
@@ -167,11 +157,11 @@ export default function LandingPage() {
       </section>
 
       {/* Bento Grid Features */}
-      <section id="features" className="py-24 px-6 bg-black border-t border-white/5">
+      <section id="features" className="py-32 px-6 bg-gradient-to-b from-black via-neutral-950 to-black">
         <div className="container-center">
-          <div className="mb-20">
-            <h2 className="text-4xl font-serif mb-4 text-white">Precision Engineering.</h2>
-            <p className="text-neutral-400 max-w-lg font-medium">Tools built for the highest levels of architectural rigor.</p>
+          <div className="mb-20 max-w-3xl">
+            <h2 className="text-4xl md:text-5xl font-serif mb-6 text-white">Built for Real Engineering Challenges.</h2>
+            <p className="text-neutral-400 text-lg font-medium leading-relaxed">Every feature is designed to mirror the complexity and pressure of production systems. No toy problems, no shortcuts.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
@@ -182,9 +172,9 @@ export default function LandingPage() {
             >
               <div className="relative z-10">
                 <BrainCircuit className="w-10 h-10 mb-6 text-white" />
-                <h3 className="text-3xl font-serif mb-4 text-white">Advanced Scenario Engine</h3>
+                <h3 className="text-3xl font-serif mb-4 text-white">Real-World Scenarios</h3>
                 <p className="text-neutral-400 max-w-sm font-medium leading-relaxed">
-                  Interactive simulations that model real-world system failures, from cascading timeouts to database deadlocks.
+                  Practice with scenarios based on actual production incidents. From cascading failures to consensus algorithms, experience the decisions that define senior engineers.
                 </p>
               </div>
               <div className="mt-8 relative z-10">
@@ -205,9 +195,9 @@ export default function LandingPage() {
             >
               <Cpu className="w-8 h-8 mb-6" />
               <div>
-                <h3 className="text-2xl font-serif mb-3">AI Reasoning</h3>
+                <h3 className="text-2xl font-serif mb-3">AI-Powered Feedback</h3>
                 <p className="text-neutral-600 text-sm font-medium">
-                  Instant, deep-dive feedback on your proposed architectures using our custom-tuned LLM.
+                  Get instant, detailed analysis of your architectural decisions. Learn from mistakes in real-time, not in production.
                 </p>
               </div>
             </motion.div>
@@ -257,65 +247,242 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Trust Quote */}
-      <section className="py-32 px-6">
-        <div className="container-center text-center">
-          <p className="text-4xl md:text-5xl font-serif leading-tight max-w-4xl mx-auto mb-12 text-white">
-            "The closest thing to having a staff engineer sitting next to you, questioning every decision."
-          </p>
-          <div className="flex flex-col items-center">
-            <div className="w-12 h-12 rounded-full bg-neutral-800 mb-4" />
-            <p className="font-bold text-sm tracking-tight uppercase text-white">Sarah Chen</p>
-            <p className="text-neutral-500 text-xs font-medium">Principal Engineer at Linear</p>
+      {/* Stats Section */}
+      <section className="py-20 px-6 bg-black">
+        <div className="container-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+            {[
+              { label: 'Scenarios', value: '150+', desc: 'Real-world challenges' },
+              { label: 'Complexity', value: 'L4-L7', desc: 'Engineering levels' },
+              { label: 'Feedback', value: 'AI-Powered', desc: 'Instant analysis' },
+              { label: 'Progress', value: 'Tracked', desc: 'Quantifiable growth' },
+            ].map((stat, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                viewport={{ once: true }}
+                className="text-center"
+              >
+                <p className="text-4xl md:text-5xl font-serif mb-2 text-white">{stat.value}</p>
+                <p className="text-sm font-bold uppercase tracking-wider text-neutral-400 mb-1">{stat.label}</p>
+                <p className="text-xs text-neutral-600">{stat.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="py-32 px-6 bg-gradient-to-b from-black via-neutral-950 to-black">
+        <div className="container-center">
+          <div className="max-w-3xl mx-auto text-center mb-20">
+            <h2 className="text-4xl md:text-5xl font-serif mb-6 text-white">How It Works.</h2>
+            <p className="text-neutral-400 text-lg font-medium leading-relaxed">
+              A structured approach to building architectural expertise, one decision at a time.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {[
+              {
+                step: '01',
+                title: 'Choose Your Challenge',
+                desc: 'Select from scenarios across different domains and complexity levels. Each scenario is based on real production systems and challenges.'
+              },
+              {
+                step: '02',
+                title: 'Design Your Solution',
+                desc: 'Work through the architectural decisions. Consider trade-offs, constraints, and failure modes. Document your reasoning.'
+              },
+              {
+                step: '03',
+                title: 'Get Expert Feedback',
+                desc: 'Receive detailed AI-powered analysis of your approach. Understand what worked, what didn\'t, and why. Track your progress over time.'
+              },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.15 }}
+                viewport={{ once: true }}
+                className="relative"
+              >
+                <div className="text-8xl font-serif text-white/5 absolute -top-8 -left-4 -z-10">
+                  {item.step}
+                </div>
+                <div className="relative">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/5 border border-white/10 text-white font-bold text-sm mb-6">
+                    {item.step}
+                  </div>
+                  <h3 className="text-2xl font-serif mb-4 text-white">{item.title}</h3>
+                  <p className="text-neutral-400 font-medium leading-relaxed">{item.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
+      {/* Solutions Section */}
+      <section id="solutions" className="py-32 px-6 bg-black">
+        <div className="container-center">
+          <div className="mb-20 text-center">
+            <h2 className="text-4xl font-serif mb-4 text-white">Beyond Code. Master Architecture.</h2>
+            <p className="text-neutral-400 max-w-2xl mx-auto font-medium leading-relaxed">
+              Code executes ideas.
+              <b> Architecture</b> defines outcomes.
+              <i> Cortex </i>develops the thinking behind resilient, scalable systems.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {[
+              {
+                title: 'System Design Thinking',
+                desc: 'Learn to break down complex problems, identify constraints, and design scalable solutions. Practice the thought process that separates senior engineers from junior developers.',
+                icon: BrainCircuit
+              },
+              {
+                title: 'Trade-off Analysis',
+                desc: 'Master the art of making informed decisions. Understand when to choose consistency over availability, when to denormalize, and how to balance competing priorities.',
+                icon: Target
+              },
+              {
+                title: 'Failure Anticipation',
+                desc: 'Develop the mindset to predict system failures before they happen. Learn to think through edge cases, cascading failures, and recovery strategies.',
+                icon: Cpu
+              },
+              {
+                title: 'Architectural Reasoning',
+                desc: 'Build the mental models used by staff+ engineers. Learn to justify your decisions, communicate trade-offs, and defend your architectural choices.',
+                icon: Trophy
+              },
+            ].map((solution, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ y: -5 }}
+                className="p-8 rounded-2xl bg-neutral-900/50 border border-white/5 hover:border-white/10 transition-all"
+              >
+                <solution.icon className="w-10 h-10 mb-6 text-white" />
+                <h3 className="text-2xl font-serif mb-3 text-white">{solution.title}</h3>
+                <p className="text-neutral-400 text-sm font-medium leading-relaxed">{solution.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="mt-16 text-center">
+            <p className="text-neutral-500 text-sm font-medium mb-6">
+              Practice scenarios across all engineering domains
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              {['Backend', 'Frontend', 'Systems', 'Data', 'DevOps', 'Security'].map((role) => (
+                <span key={role} className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest text-neutral-400">
+                  {role}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section id="pricing" className="py-32 px-6 bg-gradient-to-b from-black via-neutral-950 to-black">
+        <div className="container-center">
+          {/* Testimonial Quote */}
+          <div className="max-w-3xl mx-auto text-center mb-12">
+            <h2 className="text-emerald-500 text-2xl md:text-3xl font-medium italic leading-relaxed">
+              "The closest thing to having a staff engineer sitting next to you, questioning every decision."
+            </h2>
+          </div>
+
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-serif mb-6 text-white">Start Your Journey.</h2>
+            <p className="text-neutral-400 text-lg font-medium leading-relaxed">
+              Begin with free access to foundational scenarios. Upgrade as you grow to unlock advanced challenges and personalized AI feedback.
+            </p>
+          </div>
+
+          <div className="max-w-2xl mx-auto">
+            <div className="p-10 rounded-3xl bg-gradient-to-br from-neutral-900 to-black border border-white/10 relative overflow-hidden">
+              {/* Decorative gradient */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+
+              <div className="relative z-10">
+                <div className="flex items-center justify-between mb-8">
+                  <div>
+                    <h3 className="text-2xl font-serif text-white mb-2">Free Forever</h3>
+                    <p className="text-neutral-400 text-sm">Start learning immediately, no credit card required</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-5xl font-serif text-white">$0</p>
+                    <p className="text-neutral-500 text-sm">forever</p>
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4 mb-8">
+                  {[
+                    'Access to core scenarios',
+                    'Progress tracking dashboard',
+                    'Community discussions',
+                    'Weekly challenges',
+                    'Skill assessments',
+                    'Learning resources'
+                  ].map((feature, i) => (
+                    <div key={i} className="flex items-start gap-3">
+                      <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                      </div>
+                      <span className="text-neutral-300 text-sm">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link
+                    href="/signup"
+                    className="flex-1 text-center bg-white text-black py-4 px-8 rounded-full text-sm font-bold hover:bg-neutral-200 transition-all"
+                  >
+                    Get Started Free
+                  </Link>
+                  <Link
+                    href="/login"
+                    className="flex-1 text-center bg-white/5 text-white py-4 px-8 rounded-full text-sm font-bold hover:bg-white/10 transition-all border border-white/10"
+                  >
+                    Sign In
+                  </Link>
+                </div>
+
+                <p className="text-center text-xs text-neutral-600 mt-6">
+                  Pro features with AI-powered feedback and unlimited scenarios coming soon
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-20 px-6 border-t border-white/5 bg-black">
+      <footer className="py-20 px-6 bg-black">
         <div className="container-center">
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-12 mb-20">
-            <div className="col-span-2">
-              <div className="flex items-center gap-2 mb-6">
-                <div className="w-6 h-6 bg-white rounded flex items-center justify-center">
-                  <Zap className="w-3.5 h-3.5 text-black fill-black" />
-                </div>
-                <span className="font-bold text-sm tracking-tight text-white">CORTEX</span>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 bg-white rounded flex items-center justify-center">
+                <Zap className="w-3.5 h-3.5 text-black fill-black" />
               </div>
-              <p className="text-neutral-500 text-sm max-w-xs leading-relaxed">
-                The thinking lab for modern engineers. Practice high-stakes decision making without the high-stakes consequences.
-              </p>
+              <span className="font-bold text-sm tracking-tight text-white">CORTEX</span>
             </div>
-            <div>
-              <h4 className="font-bold text-[12px] uppercase tracking-widest mb-6 text-white">Product</h4>
-              <ul className="space-y-3 text-sm text-neutral-500 font-medium">
-                <li><a href="#" className="hover:text-white">Scenarios</a></li>
-                <li><a href="#" className="hover:text-white">Methodology</a></li>
-                <li><a href="#" className="hover:text-white">Pricing</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold text-[12px] uppercase tracking-widest mb-6 text-white">Company</h4>
-              <ul className="space-y-3 text-sm text-neutral-500 font-medium">
-                <li><a href="#" className="hover:text-white">About</a></li>
-                <li><a href="#" className="hover:text-white">Twitter</a></li>
-                <li><a href="#" className="hover:text-white">LinkedIn</a></li>
-              </ul>
-            </div>
-            <div className="col-span-2">
-              <h4 className="font-bold text-[12px] uppercase tracking-widest mb-6 text-white">Newsletter</h4>
-              <div className="flex gap-2">
-                <input type="text" placeholder="Your email" className="flex-1 bg-neutral-900 border border-white/5 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-white/20 text-white" />
-                <button className="bg-white text-black px-4 py-2 rounded-full text-sm font-bold">Join</button>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-12 border-t border-white/5">
-            <p className="text-[12px] font-medium text-neutral-500">© 2024 Cortex Labs Inc. All rights reserved.</p>
-            <div className="flex gap-8 text-[12px] font-medium text-neutral-500">
-              <a href="#" className="hover:text-white">Privacy</a>
-              <a href="#" className="hover:text-white">Terms</a>
-            </div>
+
+            <p className="text-sm text-neutral-500 font-medium">
+              The thinking lab for modern engineers.
+            </p>
+
+            <p className="text-xs text-neutral-600">
+              © {new Date().getFullYear()} Cortex. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>
