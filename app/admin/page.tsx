@@ -301,9 +301,9 @@ export default function AdminDashboard() {
                                         onChange={(e) => setEditTaskModal({ ...editTaskModal, difficulty: e.target.value as Difficulty })}
                                         className="w-full px-4 py-3 rounded-xl bg-black border border-white/10 text-white text-sm focus:outline-none focus:border-white/20"
                                     >
-                                        <option value="beginner">Beginner</option>
-                                        <option value="intermediate">Intermediate</option>
-                                        <option value="advanced">Advanced</option>
+                                        <option value="Beginner">Beginner</option>
+                                        <option value="Intermediate">Intermediate</option>
+                                        <option value="Advanced">Advanced</option>
                                     </select>
                                 </div>
                             </div>
@@ -467,8 +467,8 @@ export default function AdminDashboard() {
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id as TabType)}
                         className={`px-6 py-3 text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === tab.id
-                                ? 'text-white border-b-2 border-white'
-                                : 'text-neutral-600 hover:text-neutral-400'
+                            ? 'text-white border-b-2 border-white'
+                            : 'text-neutral-600 hover:text-neutral-400'
                             }`}
                     >
                         <tab.icon className="w-4 h-4" />

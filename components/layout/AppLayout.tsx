@@ -8,8 +8,8 @@ import {
     Globe,
     LayoutDashboard,
     LogOut,
-    Menu,
     ShieldCheck,
+    Sidebar,
     Terminal,
     Trophy,
     User,
@@ -179,7 +179,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                             }}
                             className="p-3 -ml-3 text-neutral-500 hover:text-white hover:bg-white/5 rounded-xl transition-all"
                         >
-                            <Menu className="w-5 h-5" />
+                            <Sidebar className="w-5 h-5" />
                         </button>
                         <div className="h-6 w-px bg-white/10 hidden md:block" />
                         <h1 className="text-xs font-black uppercase tracking-[0.3em] text-neutral-400">

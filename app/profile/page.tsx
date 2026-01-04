@@ -2,12 +2,13 @@
 
 import { useProgress } from '@/hooks/use-progress';
 import { useUser } from '@/hooks/use-user';
-import { Role, User as UserType } from '@/lib/types';
+import { Role, Difficulty, User as UserType } from '@/lib/types';
 import { motion } from 'framer-motion';
 import {
     Briefcase,
     Calendar,
     CheckCircle2,
+    ChevronDown,
     Edit2,
     Loader2,
     Mail,
@@ -24,7 +25,8 @@ export default function ProfilePage() {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState<Partial<UserType>>({
         full_name: '',
-        selected_role: null
+        selected_role: null,
+        selected_level: null
     });
     const [saving, setSaving] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -33,7 +35,8 @@ export default function ProfilePage() {
         if (user) {
             setFormData({
                 full_name: user.full_name || '',
-                selected_role: user.selected_role
+                selected_role: user.selected_role,
+                selected_level: user.selected_level
             });
         }
     }, [user]);
@@ -172,16 +175,31 @@ export default function ProfilePage() {
                                 Professional Focus
                             </label>
                             {isEditing ? (
-                                <select
-                                    value={formData.selected_role || ''}
-                                    onChange={(e) => setFormData({ ...formData, selected_role: (e.target.value as Role) || null })}
-                                    className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-white/20 appearance-none"
-                                >
-                                    <option value="">Select Role</option>
-                                    {roles.map(r => <option key={r} value={r}>{r}</option>)}
-                                </select>
+                                <ProfileDropdown
+                                    label={formData.selected_role || 'Select Role'}
+                                    items={roles}
+                                    onSelect={(val) => setFormData({ ...formData, selected_role: (val as Role) || null })}
+                                    placeholder="Select Role"
+                                />
                             ) : (
                                 <p className="text-sm font-medium text-white">{user.selected_role || 'No role selected'}</p>
+                            )}
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest flex items-center gap-2">
+                                <ShieldCheck className="w-3 h-3" />
+                                Difficulty Level
+                            </label>
+                            {isEditing ? (
+                                <ProfileDropdown
+                                    label={formData.selected_level || 'Select Level'}
+                                    items={['Beginner', 'Intermediate', 'Advanced']}
+                                    onSelect={(val) => setFormData({ ...formData, selected_level: (val as Difficulty) || null })}
+                                    placeholder="Select Level"
+                                />
+                            ) : (
+                                <p className="text-sm font-medium text-white">{user.selected_level || 'No level selected'}</p>
                             )}
                         </div>
                     </div>
@@ -217,6 +235,52 @@ export default function ProfilePage() {
                     </div>
                 </section>
             </div>
+        </div>
+    );
+}
+
+function ProfileDropdown({ label, items, onSelect, placeholder }: { label: string, items: string[], onSelect: (val: string) => void, placeholder: string }) {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <div className="relative">
+            <button
+                type="button"
+                onClick={() => setIsOpen(!isOpen)}
+                className="w-full bg-neutral-900 border border-white/5 rounded-lg px-3.5 py-2.5 text-[11px] font-bold uppercase tracking-widest flex items-center justify-between hover:bg-neutral-800 transition-colors text-left"
+            >
+                <span className={label === placeholder ? 'text-neutral-500' : 'text-white'}>{label}</span>
+                <ChevronDown className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {isOpen && (
+                <>
+                    <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
+                    <div className="absolute top-full mt-1.5 left-0 right-0 bg-neutral-900 border border-white/10 rounded-xl shadow-2xl py-2 z-20 overflow-hidden">
+                        <button
+                            onClick={() => {
+                                onSelect('');
+                                setIsOpen(false);
+                            }}
+                            className={`w-full text-left px-4 py-2 text-[11px] font-bold tracking-widest uppercase hover:bg-white/5 transition-colors ${label === placeholder ? 'text-white bg-white/5' : 'text-neutral-500'}`}
+                        >
+                            {placeholder}
+                        </button>
+                        {items.map(item => (
+                            <button
+                                key={item}
+                                onClick={() => {
+                                    onSelect(item);
+                                    setIsOpen(false);
+                                }}
+                                className={`w-full text-left px-4 py-2 text-[11px] font-bold tracking-widest uppercase hover:bg-white/5 transition-colors ${label === item ? 'text-white bg-white/5' : 'text-neutral-500'}`}
+                            >
+                                {item}
+                            </button>
+                        ))}
+                    </div>
+                </>
+            )}
         </div>
     );
 }

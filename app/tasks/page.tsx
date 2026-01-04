@@ -1,6 +1,7 @@
 "use client";
 
 import { useTasks } from '@/hooks/use-tasks';
+import { useUser } from '@/hooks/use-user';
 import { motion } from 'framer-motion';
 import {
     ArrowRight,
@@ -11,18 +12,19 @@ import {
     Search
 } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-const roles = ['All Roles', 'Backend Engineer', 'Frontend Engineer', 'Systems Engineer', 'Data Engineer'];
+const roles = ['All Roles', 'Backend Engineer', 'Frontend Engineer', 'Fullstack Engineer', 'Systems Engineer', 'Data Engineer', 'DevOps Engineer', 'Security Engineer'];
 const difficulties = ['All Levels', 'Beginner', 'Intermediate', 'Advanced'];
 
 export default function TasksPage() {
+    const user = useUser();
     const [selectedRole, setSelectedRole] = useState('All Roles');
     const [selectedDiff, setSelectedDiff] = useState('All Levels');
     const [searchQuery, setSearchQuery] = useState('');
 
     const roleParam = selectedRole === 'All Roles' ? undefined : selectedRole;
-    const diffParam = selectedDiff === 'All Levels' ? undefined : selectedDiff.toLowerCase();
+    const diffParam = selectedDiff === 'All Levels' ? undefined : selectedDiff;
 
     const { tasks, loading, error } = useTasks(roleParam, diffParam);
 
@@ -30,6 +32,10 @@ export default function TasksPage() {
         t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         t.description.toLowerCase().includes(searchQuery.toLowerCase())
     );
+    useEffect(() => {
+        setSelectedRole(user.user?.selected_role || 'All Roles');
+        setSelectedDiff(user.user?.selected_level || 'All Levels');
+    }, [user]);
 
     return (
         <div className="space-y-8 py-4">

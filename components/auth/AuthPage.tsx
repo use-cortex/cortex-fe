@@ -24,7 +24,8 @@ export default function AuthPage({ mode = 'login' }: { mode?: 'login' | 'signup'
         email: '',
         password: '',
         fullName: '',
-        role: 'Backend Engineer'
+        role: 'Backend Engineer',
+        level: 'Beginner'
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -38,7 +39,8 @@ export default function AuthPage({ mode = 'login' }: { mode?: 'login' | 'signup'
                     email: formData.email,
                     password: formData.password,
                     full_name: formData.fullName,
-                    selected_role: formData.role
+                    selected_role: formData.role,
+                    selected_level: formData.level
                 });
                 localStorage.setItem('cortex_token', response.data.access_token);
             } else {
@@ -126,8 +128,28 @@ export default function AuthPage({ mode = 'login' }: { mode?: 'login' | 'signup'
                                         >
                                             <option value="Backend Engineer">Backend Engineer</option>
                                             <option value="Frontend Engineer">Frontend Engineer</option>
+                                            <option value="Fullstack Engineer">Fullstack Engineer</option>
                                             <option value="Systems Engineer">Systems Engineer</option>
                                             <option value="Data Engineer">Data Engineer</option>
+                                            <option value="DevOps Engineer">DevOps Engineer</option>
+                                            <option value="Security Engineer">Security Engineer</option>
+                                        </select>
+                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-500">
+                                            <ArrowRight className="w-4 h-4 rotate-90" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[11px] font-bold text-neutral-500 uppercase tracking-widest px-1">Difficulty Level</label>
+                                    <div className="relative">
+                                        <select
+                                            value={formData.level}
+                                            onChange={(e) => setFormData({ ...formData, level: e.target.value })}
+                                            className="w-full bg-black/40 border border-white/5 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-white/20 transition-all appearance-none font-medium cursor-pointer placeholder:text-neutral-700 hover:bg-black/60"
+                                        >
+                                            <option value="Beginner">Beginner</option>
+                                            <option value="Intermediate">Intermediate</option>
+                                            <option value="Advanced">Advanced</option>
                                         </select>
                                         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-500">
                                             <ArrowRight className="w-4 h-4 rotate-90" />
