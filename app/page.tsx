@@ -52,7 +52,7 @@ export default function LandingPage() {
         <div className="h-4 w-px bg-white/10 hidden md:block" />
 
         <div className="flex items-center gap-4">
-          {!loading && !user ? (
+          {!user ? (
             <>
               <Link href="/login" className="text-[13px] font-medium text-neutral-400 hover:text-white transition-colors">Sign in</Link>
               <Link href="/signup" className="bg-white text-black py-1.5 px-3.5 rounded-full text-[13px] font-medium hover:bg-neutral-200 transition-colors">
