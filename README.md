@@ -1,6 +1,6 @@
 ### Cortex API Server
 ```
-https://github.com/RHL-RWT-01/cortex-server
+https://github.com/RHL-RWT-01/cortex-be
 ```
 
 # Cortex Client
